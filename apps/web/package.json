@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@raga-neobank/core": "workspace:*",
-    "@repo/ui": "workspace:*",
+    "@raga-neobank/react": "workspace:*",
+    "@raga-neobank/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.1.18",
     "@tanstack/query-async-storage-persister": "^5.90.2",
     "@tanstack/query-core": "^5.90.7",
@@ -20,6 +21,7 @@
     "@tanstack/react-query-devtools": "^5.75.4",
     "@tanstack/react-query-persist-client": "^5.90.2",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
     "next": "16.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

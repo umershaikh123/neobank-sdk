@@ -23,7 +23,7 @@ importers:
 
   apps/docs:
     dependencies:
-      '@repo/ui':
+      '@raga-neobank/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -63,7 +63,10 @@ importers:
       '@raga-neobank/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@repo/ui':
+      '@raga-neobank/react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      '@raga-neobank/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tailwindcss/postcss':
@@ -87,6 +90,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
       next:
         specifier: 16.1.0
         version: 16.1.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -185,16 +191,17 @@ importers:
         specifier: ^8.50.0
         version: 8.50.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.2)
 
-  packages/typescript-config: {}
-
-  packages/ui:
+  packages/react:
     dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
+      '@raga-neobank/core':
+        specifier: workspace:*
+        version: link:../core
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.90.20(react@19.2.0)
+      zod:
+        specifier: ^3.22.0
+        version: 3.25.76
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -202,6 +209,63 @@ importers:
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.2(@types/react@19.2.2)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.0(react@19.2.0)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.2)
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@22.15.3)(lightningcss@1.30.2)
+
+  packages/typescript-config: {}
+
+  packages/ui:
+    dependencies:
+      '@raga-neobank/core':
+        specifier: workspace:*
+        version: link:../core
+      '@raga-neobank/react':
+        specifier: workspace:*
+        version: link:../react
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+      tailwind-merge:
+        specifier: ^3.0.1
+        version: 3.4.0
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@tailwindcss/postcss':
+        specifier: ^4.0.0
+        version: 4.1.18
       '@types/node':
         specifier: ^22.15.3
         version: 22.15.3
@@ -214,6 +278,15 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
+      postcss:
+        specifier: ^8.4.35
+        version: 8.5.6
+      tailwindcss:
+        specifier: ^4.0.0
+        version: 4.1.18
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.2)
       typescript:
         specifier: 5.9.2
         version: 5.9.2
@@ -2094,6 +2167,11 @@ packages:
   loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
 
+  lucide-react@0.475.0:
+    resolution: {integrity: sha512-NJzvVu1HwFVeZ+Gwq2q00KygM1aBhy/ZrhY9FsAgJtpB+E4R7uxRk9M2iKvHa6/vNxZydIB59htha4c2vvwvVg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -2852,6 +2930,9 @@ packages:
   yocto-queue@1.2.2:
     resolution: {integrity: sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ==}
     engines: {node: '>=12.20'}
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
 snapshots:
 
@@ -4745,6 +4826,10 @@ snapshots:
     dependencies:
       get-func-name: 2.0.2
 
+  lucide-react@0.475.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -5590,3 +5675,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yocto-queue@1.2.2: {}
+
+  zod@3.25.76: {}
