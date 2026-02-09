@@ -1,0 +1,301 @@
+import { Vault, User, BarChart3, Zap } from "lucide-react"
+import type { CoreModule } from "./types"
+
+export const CORE_MODULES: CoreModule[] = [
+  {
+    id: "vaults",
+    name: "Vaults",
+    icon: Vault,
+    desc: "Browse available investment strategy vaults",
+    auth: false,
+    methods: [
+      {
+        name: "sdk.vaults.list()",
+        hook: "useVaults()",
+        hookType: "Query",
+        desc: "Fetches all available vaults from the platform.",
+        params: null,
+        returnType: "Vault[]",
+        fields: [
+          {
+            name: "id",
+            type: "string (UUID)",
+            desc: "Unique vault identifier",
+          },
+          {
+            name: "curatorId",
+            type: "string",
+            desc: "Vault curator/manager ID",
+          },
+          {
+            name: "vaultName",
+            type: "string",
+            desc: "Human-readable vault name",
+          },
+          {
+            name: "vaultAddress",
+            type: "string",
+            desc: "On-chain contract address",
+          },
+          {
+            name: "chainId",
+            type: "number",
+            desc: "Blockchain network ID (e.g. 8453 = Base)",
+          },
+          {
+            name: "isEnabled",
+            type: "boolean",
+            desc: "Whether vault is currently active",
+          },
+          {
+            name: "depositEnabled",
+            type: "boolean",
+            desc: "Whether new deposits accepted",
+          },
+          {
+            name: "strategyAllocations",
+            type: "StrategyAllocation[]",
+            desc: "Strategy IDs with allocation splits",
+          },
+        ],
+        sample: {
+          id: "6e9b8e9f-bb3e-4e8a-b9ea-f3ab27449b38",
+          curatorId: "cur_abc123",
+          vaultName: "USDC Growth Vault",
+          vaultAddress: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0",
+          chainId: 8453,
+          isEnabled: true,
+          depositEnabled: true,
+          strategyAllocations: [
+            { strategyId: "strat_001", allocationSplit: 0.6 },
+            { strategyId: "strat_002", allocationSplit: 0.4 },
+          ],
+        },
+      },
+      {
+        name: "sdk.vaults.get(vaultId)",
+        hook: "useVault(vaultId)",
+        hookType: "Query",
+        desc: "Fetches details for a specific vault by UUID.",
+        params: [
+          { name: "vaultId", type: "string (UUID)", desc: "Target vault ID" },
+        ],
+        returnType: "Vault",
+        fields: "Same as sdk.vaults.list()",
+        sample: null,
+      },
+    ],
+  },
+  {
+    id: "user",
+    name: "User",
+    icon: User,
+    desc: "Manage authenticated user profiles",
+    auth: true,
+    methods: [
+      {
+        name: "sdk.user.getUser()",
+        hook: "useUser()",
+        hookType: "Query",
+        desc: "Fetches the authenticated user's profile details.",
+        params: null,
+        returnType: "User",
+        fields: [
+          { name: "id", type: "string", desc: "Unique user identifier" },
+          { name: "address", type: "string", desc: "Ethereum wallet address" },
+          { name: "isEnabled", type: "boolean", desc: "Account active status" },
+          { name: "bankId", type: "string", desc: "Associated bank ID" },
+          {
+            name: "createdOn",
+            type: "string (ISO)",
+            desc: "Account creation date",
+          },
+          { name: "updatedOn", type: "string (ISO)", desc: "Last update date" },
+        ],
+        sample: {
+          id: "usr_7f3a2b",
+          address: "0x742d35cc6634c0532925a3b844bc9e7595f0beb0",
+          isEnabled: true,
+          bankId: "bank_raga_01",
+          createdOn: "2024-11-15T10:30:00Z",
+          updatedOn: "2025-01-20T14:22:00Z",
+        },
+      },
+    ],
+  },
+  {
+    id: "portfolio",
+    name: "Portfolio",
+    icon: BarChart3,
+    desc: "Track positions and performance",
+    auth: true,
+    methods: [
+      {
+        name: "sdk.portfolio.getPortfolio()",
+        hook: "usePortfolio()",
+        hookType: "Query",
+        desc: "Fetches the user's complete portfolio with all vault positions.",
+        params: null,
+        returnType: "Portfolio",
+        fields: [
+          { name: "bank.name", type: "string", desc: "Managing bank name" },
+          { name: "bank.legalName", type: "string", desc: "Legal entity name" },
+          {
+            name: "walletAddress",
+            type: "string",
+            desc: "User's wallet address",
+          },
+          {
+            name: "positions[].vaultName",
+            type: "string",
+            desc: "Vault display name",
+          },
+          {
+            name: "positions[].depositValueInUsd",
+            type: "string",
+            desc: "Original deposit in USD",
+          },
+          {
+            name: "positions[].currentValueInUsd",
+            type: "string",
+            desc: "Current value in USD",
+          },
+          {
+            name: "positions[].chainId",
+            type: "number",
+            desc: "Blockchain network",
+          },
+          {
+            name: "positions[].decimals",
+            type: "number",
+            desc: "Token precision (e.g. 6)",
+          },
+        ],
+        sample: {
+          bank: { name: "Raga Finance", legalName: "Raga Finance Ltd." },
+          walletAddress: "0x742d35cc...f0beb0",
+          positions: [
+            {
+              vaultName: "USDC Growth Vault",
+              vaultAddress: "0xabc...def",
+              chainId: 8453,
+              decimals: 6,
+              depositValueInAsset: "1000000",
+              depositValueInUsd: "1000.00",
+              currentValueInAsset: "1045230",
+              currentValueInUsd: "1045.23",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "transactions",
+    name: "Transactions",
+    icon: Zap,
+    desc: "Generate blockchain transaction payloads",
+    auth: true,
+    methods: [
+      {
+        name: "sdk.transactions.buildDepositPayload(req)",
+        hook: "useBuildDeposit()",
+        hookType: "Mutation",
+        desc: "Generates a simulation-verified deposit transaction payload.",
+        params: [
+          { name: "vaultId", type: "string (UUID)", desc: "Target vault" },
+          { name: "amount", type: "string", desc: "Amount in smallest units" },
+          { name: "chainId", type: "number", desc: "Blockchain network ID" },
+        ],
+        returnType: "TransactionPayload",
+        fields: [
+          { name: "vaultId", type: "string", desc: "Target vault UUID" },
+          { name: "vaultName", type: "string", desc: "Vault display name" },
+          { name: "chainId", type: "number", desc: "Target network" },
+          { name: "txs[].step", type: "number", desc: "Step order (1, 2, 3…)" },
+          {
+            name: "txs[].type",
+            type: "string",
+            desc: "approve | deposit | withdraw | redeem",
+          },
+          {
+            name: "txs[].description",
+            type: "string",
+            desc: "Human-readable step description",
+          },
+          {
+            name: "txs[].simulationSuccess",
+            type: "boolean",
+            desc: "Whether simulation passed",
+          },
+          {
+            name: "summary.inputAmount",
+            type: "string",
+            desc: "Input amount in smallest units",
+          },
+          {
+            name: "summary.assetSymbol",
+            type: "string",
+            desc: "Input token symbol",
+          },
+          {
+            name: "summary.preview.expectedOutput",
+            type: "string",
+            desc: "Expected output amount",
+          },
+        ],
+        sample: {
+          vaultId: "6e9b8e9f-bb3e-4e8a-b9ea-f3ab27449b38",
+          vaultName: "USDC Growth Vault",
+          chainId: 8453,
+          txs: [
+            {
+              step: 1,
+              type: "approve",
+              description: "Approve USDC spending",
+              simulationSuccess: true,
+            },
+            {
+              step: 2,
+              type: "deposit",
+              description: "Deposit into vault",
+              simulationSuccess: true,
+            },
+          ],
+          summary: {
+            inputAmount: "1000000",
+            assetSymbol: "USDC",
+            decimals: 6,
+            preview: {
+              expectedOutput: "998500",
+              outputSymbol: "wgUSDC",
+              exchangeRate: "0.9985",
+            },
+            warnings: [],
+            userBalance: "5000000",
+          },
+        },
+      },
+      {
+        name: "sdk.transactions.buildWithdrawPayload(req)",
+        hook: "useBuildWithdraw()",
+        hookType: "Mutation",
+        desc: "Generates a simulation-verified withdrawal transaction payload.",
+        params: "Same as buildDepositPayload",
+        returnType: "TransactionPayload",
+        fields: "Same as buildDepositPayload",
+        sample: null,
+      },
+      {
+        name: "sdk.transactions.buildRedeemPayload(req)",
+        hook: "useBuildRedeem()",
+        hookType: "Mutation",
+        desc: "Generates a simulation-verified redemption transaction payload.",
+        params: "Same as buildDepositPayload",
+        returnType: "TransactionPayload",
+        fields: "Same as buildDepositPayload",
+        sample: null,
+      },
+    ],
+  },
+]
